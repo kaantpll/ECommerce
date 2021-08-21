@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ECommerce</string>
+    <string name="sign_up_with_one_of_following_options">Sign up with one of following options.</string>
 </resources>
