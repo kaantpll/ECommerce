@@ -3,13 +3,14 @@ package com.example.ecommerce.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.text.TextUtils
 import android.view.View
-import android.widget.Toast
 import com.example.ecommerce.R
 import com.example.ecommerce.utilities.ErrorValidationSnackBar
-import com.google.android.material.snackbar.Snackbar
+import com.example.ecommerce.utilities.CustomAlertDialog
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_sign_up.*
 
 class SignUpActivity : AppCompatActivity() {
@@ -22,6 +23,8 @@ class SignUpActivity : AppCompatActivity() {
         setContentView(R.layout.activity_sign_up)
 
         mAuth = FirebaseAuth.getInstance()
+
+        val dialogView = View.inflate(this,R.layout.custom_success_dialog_alert,null)
 
         editText.setOnFocusChangeListener { view, focused ->
             if (focused) editText.setBackgroundResource(R.drawable.focus_border);
@@ -44,16 +47,22 @@ class SignUpActivity : AppCompatActivity() {
             val password = editText3.text.toString()
 
             if(validation(it)){
-                createNewAccount(email,password)
+                createNewAccount(email,password,dialogView)
             }
         }
     }
 
-    private fun createNewAccount(email: String, password: String) {
+    private  fun createNewAccount(email: String, password: String,view : View) {
         mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener { task->
             if(task.isSuccessful) {
-                val intent = Intent(this,LogInActivity::class.java)
-                startActivity(intent)
+                CustomAlertDialog.showAlertDialog(this,view)
+
+                val user : FirebaseUser= task.result!!.user!!
+
+                Handler().postDelayed({
+                    val intent = Intent(this,FeedActivity::class.java)
+                    startActivity(intent)
+                }, 3000)
             }
         }
 
@@ -65,7 +74,7 @@ class SignUpActivity : AppCompatActivity() {
                 ErrorValidationSnackBar.showErrorSnackBar(this,view,"Name is not empty !!! ",true)
                 false
             }
-            TextUtils.isEmpty(editText2.text.toString().trim(){it <= ' '}) || editText2.text.toString().contains("@",ignoreCase = true)-> {
+            TextUtils.isEmpty(editText2.text.toString().trim(){it <= ' '}) || !editText2.text.toString().contains("@",ignoreCase = true)-> {
                 ErrorValidationSnackBar.showErrorSnackBar(this, view, "Email can't be short", true)
                 false
             }
@@ -73,10 +82,9 @@ class SignUpActivity : AppCompatActivity() {
                 ErrorValidationSnackBar.showErrorSnackBar(this,view,"Password can't be than less 6 ",true)
                 false
             }
-
             else -> {
                 ErrorValidationSnackBar.showErrorSnackBar(this,view,"Success",false)
-                false
+                true
             }
         }
 
