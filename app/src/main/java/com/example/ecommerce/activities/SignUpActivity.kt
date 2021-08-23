@@ -5,24 +5,29 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import com.example.ecommerce.R
 import com.example.ecommerce.utilities.ErrorValidationSnackBar
 import com.example.ecommerce.utilities.CustomAlertDialog
+import com.example.ecommerce.utilities.constant.Constants.USER_COLLECTION_NAME
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_sign_up.*
 
 class SignUpActivity : AppCompatActivity() {
 
     private lateinit var mAuth : FirebaseAuth
-
+    private lateinit var db : FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
 
         mAuth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
+
 
         val dialogView = View.inflate(this,R.layout.custom_success_dialog_alert,null)
 
@@ -50,6 +55,14 @@ class SignUpActivity : AppCompatActivity() {
                 createNewAccount(email,password,dialogView)
             }
         }
+
+        materialButton.setOnClickListener {
+            signInWithGoogleAccount()
+        }
+    }
+
+    private fun signInWithGoogleAccount() {
+    
     }
 
     private  fun createNewAccount(email: String, password: String,view : View) {
@@ -59,11 +72,33 @@ class SignUpActivity : AppCompatActivity() {
 
                 val user : FirebaseUser= task.result!!.user!!
 
+                val userId = user.uid
+
+                val myUser = hashMapOf(
+                    "id" to user.uid,
+                    "email" to email,
+                    "password" to password,
+                    "name" to "",
+                    "gender" to "",
+                    "image" to "",
+                    "mobile" to "",
+                    "profileCompleted" to "",
+                    )
+
+                registerToDatabase(userId,myUser)
+
                 Handler().postDelayed({
                     val intent = Intent(this,FeedActivity::class.java)
                     startActivity(intent)
                 }, 3000)
             }
+        }
+
+    }
+
+    private fun registerToDatabase(userId : String,myUser: HashMap<String, String>) {
+        db.collection(USER_COLLECTION_NAME).document(userId).set(myUser).addOnSuccessListener{
+            Log.d("REGISTER","Added")
         }
 
     }

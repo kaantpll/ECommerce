@@ -11,18 +11,27 @@ import com.example.ecommerce.R
 import com.example.ecommerce.utilities.CustomAlertDialog
 import com.example.ecommerce.utilities.ErrorValidationSnackBar
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_log_in.*
 
 
 class LogInActivity : AppCompatActivity() {
 
     private lateinit var mAuth : FirebaseAuth
+    private var user : FirebaseUser? =null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in)
 
         mAuth = FirebaseAuth.getInstance()
+        user = mAuth.currentUser
+
+        if(user != null){
+            val intent = Intent(this,FeedActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
         val dialogView = View.inflate(this,R.layout.loading_dialog,null)
 
