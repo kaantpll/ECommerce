@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/dashboardFragment"
-        android:name="com.example.ecommerce.DashboardFragment"
+        android:name="com.example.ecommerce.ui.DashboardFragment"
         android:label="fragment_dashboard"
         tools:layout="@layout/fragment_dashboard" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/productsFragment"
-        android:name="com.example.ecommerce.ProductsFragment"
+        android:name="com.example.ecommerce.ui.ProductsFragment"
         android:label="fragment_products"
         tools:layout="@layout/fragment_products" >
         <action
@@ -25,7 +25,16 @@
     </fragment>
     <fragment
         android:id="@+id/orderFragment"
-        android:name="com.example.ecommerce.OrderFragment"
+        android:name="com.example.ecommerce.ui.OrderFragment"
         android:label="fragment_order"
-        tools:layout="@layout/fragment_order" />
+        tools:layout="@layout/fragment_order" >
+        <action
+            android:id="@+id/action_orderFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.ecommerce.ui.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>
