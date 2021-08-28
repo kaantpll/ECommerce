@@ -132,14 +132,14 @@ class AddProductActivity : AppCompatActivity() {
                             "productDescription" to description,
                             "price" to price,
                             "stock" to stock,
-                            "discountValue" to value,
+                            "discountValue" to value.toString(),
                             "user_id" to user_id,
                             "shareDate" to shareDate,
                             "imageUrl" to url
                     )
                     db.collection(Constants.PRODUCT_COLLECTION_NAME)
                             .add(product).addOnSuccessListener { task->
-
+                            binding.productAddButton.isEnabled = false
 
                     }
                 }

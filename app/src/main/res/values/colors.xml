@@ -12,4 +12,5 @@
     <color name="successRegister">#12E70B</color>
     <color name="errorRegister">#E20909</color>
     <color name="transparent">#00000000</color>
+    <color name="cardBackgroundColor">#EDE9E9</color>
 </resources>
